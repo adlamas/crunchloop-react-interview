@@ -13,8 +13,8 @@ export const getTodoLists = async (): Promise<TodoListInterface[]> => {
   return response.json();
 };
 
-export const getTodoItems = async (listId: number): Promise<TodoItemInterface[]> => {
-  const response = await fetch(`${API_URL}/todo_lists/${listId}/todo_items`);
+export const getTodoItems = async (listId: string): Promise<TodoItemInterface[]> => {
+  const response = await fetch(`${API_URL}/api/todolists/${listId}/todo_items`);
 
   if (!response.ok) {
     throw new Error('Error al obtener items');
