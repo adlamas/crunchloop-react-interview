@@ -1,4 +1,5 @@
 import { TodoListInterface } from '../interfaces/todolist.interface';
+import { TodoItemInterface } from '../interfaces/todoitem.interface';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
@@ -9,5 +10,15 @@ export const getTodoLists = async (): Promise<TodoListInterface[]> => {
     throw new Error('Error al obtener los datos de la API');
   }
   
+  return response.json();
+};
+
+export const getTodoItems = async (listId: number): Promise<TodoItemInterface[]> => {
+  const response = await fetch(`${API_URL}/todo_lists/${listId}/todo_items`);
+
+  if (!response.ok) {
+    throw new Error('Error al obtener items');
+  }
+
   return response.json();
 };
