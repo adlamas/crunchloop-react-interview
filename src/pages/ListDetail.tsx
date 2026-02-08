@@ -1,44 +1,50 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { getTodoItems } from '../services/todolist.service';
 import { TodoItemInterface } from '../interfaces/todoitem.interface';
+import '../styles/ListDetail.css';
 
 const ListDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const [items, setItems] = useState<TodoItemInterface[]>([])
+  const [items, setItems] = useState<TodoItemInterface[]>([]);
 
   useEffect(() => {
-    if (!id) return; // Guard clause: if id is undefined, stop here
+    if (!id) return;
 
-    const fetchItems = async(id: string) => {
+    const fetchItems = async (id: string) => {
       try {
-        const items = await getTodoItems(id);
-        setItems(items)
+        const data = await getTodoItems(id);
+        setItems(data);
       } catch (error) {
-        console.error("Error loading lists:", error);
+        console.error("Error loading items:", error);
       }
-    }
+    };
 
-    fetchItems(id)
-  }, [])
+    fetchItems(id);
+  }, [id]);
 
-  return(
-    <div>
-      {
-        items.map((item) => {
-          return(
-            <div style={{marginTop: '2em'}} key={item.id}>
-              <h3>Content de Item: {item.content}</h3>
-              <h4>ID de Item: {item.id}</h4>
+  return (
+    <div className="page-container">
+      <Link to="/">← Volver</Link>
+      <h1>List ID: {id}</h1>
 
-              <h4>Completado: {item.completed ? 'SI' : 'NO'}</h4>
-            </div>
-          )
-      })
+      {items.map((item) => {
+        return (
+          <div key={item.id} className="item-card">
+            <h3>Content de Item: {item.content}</h3>
+            <h4>ID de Item: {item.id}</h4>
 
-      }
+            <h4>
+              Completado: 
+              <span className={item.completed ? 'status-yes' : 'status-no'}>
+                {item.completed ? 'SI' : 'NO'}
+              </span>
+            </h4>
+          </div>
+        );
+      })}
     </div>
-  )
-}
+  );
+};
 
 export default ListDetail;
