@@ -1,35 +1,19 @@
-import { useEffect, useState } from 'react';
-import { TodoListInterface } from './interfaces/todolist.interface';
-import { getTodoLists } from './services/todolist.service';
-import TodoList from './components/TodoList';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import ListDetail from './pages/ListDetail';
 
 function App() {
-  const [todos, setTodos] = useState<TodoListInterface[]>([]);
-
-  useEffect(() => {
-    const fetchTodos = async () => {
-      try {
-        const data = await getTodoLists();
-        setTodos(data);
-      } catch (error) {
-        console.error("Error cargando listas:", error);
-      }
-    };
-
-    fetchTodos();
-  }, []);
-
   return (
-    <div>
-      <h1>Mis Todo Lists</h1>
-      
-      { 
-        todos.map((item) => (
-          <TodoList key={item.id} name={item.name} id={item.id} />
-        ))
-      }
-    </div>
-  )
+    <BrowserRouter>
+      <Routes>
+        {/* Main route for listing all TodoLists */}
+        <Route path="/" element={<Home />} />
+        
+        {/* Dynamic route for a specific TodoList and its items */}
+        <Route path="/lists/:id" element={<ListDetail />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;
