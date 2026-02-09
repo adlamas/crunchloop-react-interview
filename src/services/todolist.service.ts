@@ -22,3 +22,16 @@ export const getTodoItems = async (listId: string): Promise<TodoItemInterface[]>
 
   return response.json();
 };
+
+export const completeItem = async (listId: string, itemId: string): Promise<TodoItemInterface> => {
+  const response =  await fetch(`${API_URL}/api/todolists/${listId}/todo_items/${itemId}/complete`, {
+                      method: 'PUT',
+                      headers: { 'Content-Type': 'application/json'}
+                    });
+
+  if (!response.ok) {
+    throw new Error('Error al completar item');
+  }
+
+  return response.json();
+}
