@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { Virtuoso } from 'react-virtuoso';
+
 import { getTodoItems, completeItem } from '../services/todolist.service';
 import { TodoItemInterface } from '../interfaces/todoitem.interface';
 import '../styles/ListDetail.css';
@@ -24,14 +26,7 @@ const ListDetail = () => {
     fetchItems(id);
   }, [id]);
 
-  // Using useCallback to maintain the same function reference across renders
-  // This is vital for React.memo to work in the child component
-  //const handleComplete2 = useCallback(async (listId: string, itemId: string) => {
-  //  if (!id) return;
-  //
-  //}, [id]);
-
-const handleComplete = useCallback(async (listId: string, itemId: string) => {
+  const handleComplete = useCallback(async (listId: string, itemId: string) => {
     try {
       const completedItem = await completeItem(listId, itemId);
 
@@ -52,9 +47,16 @@ const handleComplete = useCallback(async (listId: string, itemId: string) => {
       <h1>List ID: {id}</h1>
 
       {items.length > 0 ? (
-        items.map((item) => (
-          <TodoItem key={item.id} id={item.id} completed={item.completed} content={item.content} todoListId={id!} onComplete={handleComplete} />
-        ))
+        <div className="list-viewport">
+          <Virtuoso
+            data={items}
+            itemContent={(_index, item) => (
+              <div className="item-wrapper">
+                <TodoItem id={item.id} completed={item.completed} content={item.content} todoListId={id!} onComplete={handleComplete} />
+              </div>
+            )}
+          />
+        </div>
       ) : (
         <p>No hay items en esta lista.</p>
       )}

@@ -1,15 +1,32 @@
 /* Container for the whole page */
 .page-container {
   background-color: #f5f5f5;
-  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
   padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Container for the virtualized list. 
+  It must have a defined height or flex-grow to work properly.
+*/
+.list-viewport {
+  flex-grow: 1;
+  margin-top: 10px;
+}
+
+/* Wrapper for each virtual item. 
+  Using padding instead of margin for better height calculation.
+*/
+.item-wrapper {
+  padding-bottom: 1em;
 }
 
 /* Individual card for each TodoItem */
 .item-card {
   background-color: #e0e0e0;
   padding: 15px;
-  margin-top: 1em;
   border-radius: 8px;
   border: 1px solid #ccc;
 }
