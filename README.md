@@ -1,18 +1,19 @@
+# Design and Performance Decisions
 
-# react-interview
+## 🚀 Performance Optimization
 
-This is a simple React application using Vite as the build tool. Candidates are expected to build a Todo List UI by consuming the provided API. The scaffold includes basic setup and configurations to get started quickly.
+### 1. List Virtualization (React Virtuoso)
+We used **React Virtuoso** to handle potential large datasets efficiently.
 
-### Installation
+* **Problem:** Standard rendering creates a DOM node for every single item, which degrades performance and increases memory usage as the list grows.
+* **Solution:** Virtuoso implements "Windowing," rendering only the items currently visible in the viewport. This keeps the DOM lightweight and ensures a smooth 60 FPS scrolling experience regardless of the total number of items.
 
-This project provides a development environment using **devContainers**. Open the repository in a devContainer using your preferred IDE (e.g., VS Code). The devContainer will have all dependencies pre-installed.
+### 2. Stable Function Identities (`useCallback`)
+The `handleComplete` function is wrapped in a `useCallback` hook.
 
-## Contact
+* **Reasoning:** In React, functions are re-created on every render. By using `useCallback`, we maintain the same function instance across re-renders. This is crucial when passing callbacks to memoized child components to prevent them from breaking their memoization.
 
-- Martín Fernández (mfernandez@crunchloop.io)
+### 3. Component Memoization (`React.memo`)
+The `TodoItem` component is designed to be wrapped in `React.memo`.
 
-## About Crunchloop
-
-![crunchloop](https://s3.amazonaws.com/crunchloop.io/logo-blue.png)
-
-We strongly believe in giving back :rocket:. Let's work together [`Get in touch`](https://crunchloop.io/#contact).
+* **Reasoning:** Combined with `useCallback`, this ensures that only the specific item being updated (e.g., toggling completion) re-renders. The rest of the items in the virtualized list remain untouched, saving significant CPU cycles.
