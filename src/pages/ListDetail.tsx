@@ -37,7 +37,6 @@ const ListDetail = () => {
       );
     } catch (error) {
       console.error("Error updating item:", error);
-      alert("No se pudo actualizar el item.");
     }
   }, []);
 
